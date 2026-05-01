@@ -14,6 +14,7 @@ if str(BASE_DIR) not in sys.path:
 from src.config import settings
 from src.database import Base
 from src.models.hotels import HotelsOrm
+from src.models.rooms import RoomsOrm
 
 
 # this is the Alembic Config object, which provides
