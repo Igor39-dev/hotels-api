@@ -18,9 +18,19 @@ async def get_hotels(
     id: int | None = Query(default=None, description="ID отеля"),
     title: str | None = Query(default=None, description="Название отеля"),
 ):
+    per_page = pagination.per_page or 5
     async with async_session_maker() as session:
         query = select(HotelsOrm)
-        result =await session.execute(query)
+        if id:
+            query = query.filter_by(id=id)
+        if title:
+            query = query.filter_by(title=title)
+        query = (
+            query
+            .limit(per_page)
+            .offset(per_page * (pagination.page-1))
+        )
+        result = await session.execute(query)
         # print(result.scalars().all())
         hotels = result.scalars().all()
         return hotels
@@ -34,15 +44,15 @@ async def create_hotel(hotel_data: Hotel = Body(openapi_examples={
     "1": {
         "summary": "Сочи",
         "value": {
-            "title": "Отель Сочи 5 звезда у моря",
-            "location": "ул. Катина, 1"
+            "title": "Отель 4 seasons",
+            "location": "Сочи,ул. Катина, 1"
         }
     },
     "2": {
         "summary": "Дубай",
         "value": {
-            "title": "Отель Дубай 1 звезда",
-            "location": "ул. Шейха, 2"
+            "title": "Отель Delux 1 звезда",
+            "location": "Дубай, ул. Шейха, 2"
         }
     }
 })):
