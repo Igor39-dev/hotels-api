@@ -1,12 +1,8 @@
-from typing import Annotated
-from fastapi import Query, Body, APIRouter, Depends
-from sqlalchemy import func, insert, select
+from fastapi import Query, Body, APIRouter
 from repositories.hotels import HotelsRepository
 from src.api.dependencies import PaginationDep
 from src.database import async_session_maker
-from src.models.hotels import HotelsOrm
-from src.shemas.hotels import Hotel, HotelPATCH
-from src.database import engine
+from src.shemas.hotels import Hotel, SHotelPATCH
 
 
 router = APIRouter(prefix="/hotels", tags=["ОТЕЛИ"])
@@ -28,8 +24,6 @@ async def get_hotels(
             offset=per_page * (pagination.page-1)
         )
     
-
-
 
 @router.post("")
 async def create_hotel(hotel_data: Hotel = Body(openapi_examples={
@@ -68,16 +62,13 @@ async def edit_hotel(hotel_id: int, hotel_data: Hotel):
     summary="Чатичное удаление данных",
     description="<h1>Удаление данных отеля по ID, можно отправить name, а можно title</h1>",
 )
-def partially_edit_hotel(
+async def partially_edit_hotel(
     hotel_id: int,
-    hotel_data: HotelPATCH,
+    hotel_data: SHotelPATCH,
 ):
-    global hotels
-    hotel = [hotel for hotel in hotels if hotel["id"] == hotel_id][0]
-    if hotel_data.title:
-        hotel["title"] = hotel_data.title
-    if hotel_data.name:
-        hotel["name"] = hotel_data.name
+    async with async_session_maker() as session:
+        await HotelsRepository(session).edit(hotel_data, is_patch=True, id=hotel_id)
+        await session.commit()
     return {"status": "OK"}
 
 
