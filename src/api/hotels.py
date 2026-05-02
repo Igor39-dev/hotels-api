@@ -1,6 +1,7 @@
 from typing import Annotated
 from fastapi import Query, Body, APIRouter, Depends
 from sqlalchemy import func, insert, select
+from repositories.hotels import HotelsRepository
 from src.api.dependencies import PaginationDep
 from src.database import async_session_maker
 from src.models.hotels import HotelsOrm
@@ -18,23 +19,25 @@ async def get_hotels(
     location: str | None = Query(default=None, description="Локация"),
     title: str | None = Query(default=None, description="Название отеля"),
 ):
-    per_page = pagination.per_page or 5
     async with async_session_maker() as session:
-        query = select(HotelsOrm)
-        if location:
-            query = query.filter(func.lower(HotelsOrm.location).contains(location.strip().lower()))
-        if title:
-            query = query.filter(func.lower(HotelsOrm.title).contains(title.strip().lower()))
-        query = (
-            query
-            .limit(per_page)
-            .offset(per_page * (pagination.page-1))
-        )
-        print(query.compile(engine, compile_kwargs={"literal_binds": True}))
-        result = await session.execute(query)
-        # print(result.scalars().all())
-        hotels = result.scalars().all()
-        return hotels
+        return await HotelsRepository(session).get_all()
+    # per_page = pagination.per_page or 5
+    # async with async_session_maker() as session:
+    #     query = select(HotelsOrm)
+    #     if location:
+    #         query = query.filter(func.lower(HotelsOrm.location).contains(location.strip().lower()))
+    #     if title:
+    #         query = query.filter(func.lower(HotelsOrm.title).contains(title.strip().lower()))
+    #     query = (
+    #         query
+    #         .limit(per_page)
+    #         .offset(per_page * (pagination.page-1))
+    #     )
+    #     print(query.compile(engine, compile_kwargs={"literal_binds": True}))
+
+    #     result = await session.execute(query)
+    #     hotels = result.scalars().all()
+    #     return hotels
 
     # if pagination.page and pagination.per_page:
     #     return hotels_[pagination.per_page * (pagination.page-1):][:pagination.per_page]
