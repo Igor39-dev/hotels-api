@@ -1,7 +1,7 @@
 from fastapi import APIRouter
 from pwdlib import PasswordHash
 
-from repositories.users import UsersRepository
+from src.repositories.users import UsersRepository
 from src.database import async_session_maker
 from src.shemas.users import UserAdd, UserRequestAdd
 
@@ -22,4 +22,3 @@ async def register_user(
         await session.commit()
 
     return {"status": "OK"}
-    
