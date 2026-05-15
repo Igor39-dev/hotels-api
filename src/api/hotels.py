@@ -49,12 +49,14 @@ async def create_hotel(db: DBDep, hotel_data: HotelAdd = Body(openapi_examples={
     }
 })):
     hotel = await db.hotels.add(hotel_data)
+    await db.commit()
     return {"status": "OK", "data": hotel}
 
 
 @router.put("/{hotel_id}")
 async def edit_hotel(db: DBDep, hotel_id: int, hotel_data: HotelAdd):
     await db.hotels.edit(hotel_data, id=hotel_id)
+    await db.commit()
     return {"status": "OK"}
 
 
@@ -70,10 +72,12 @@ async def partially_edit_hotel(
     hotel_data: SHotelPATCH,
 ):
     await db.hotels.edit(hotel_data, is_patch=True, id=hotel_id)
+    await db.commit()
     return {"status": "OK"}
 
 
 @router.delete("/{hotel_id}")
 async def delete_hotel(db: DBDep, hotel_id: int):
     await db.hotels.delete(id=hotel_id)
+    await db.commit()
     return {"status": "OK"}

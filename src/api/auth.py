@@ -19,7 +19,7 @@ async def register_user(
     hashed_password = AuthService().hash_password(data.password)
     new_user_data = UserAdd(email=data.email, hashed_password=hashed_password)
     await db.users.add(new_user_data)
-
+    await db.commit()
     return {"status": "OK"}
 
 
@@ -41,13 +41,14 @@ async def login_user(
 
 @router.get("/me")
 async def get_me(
-    db: DBDep,
     user_id: UserIdDep    
 ):
-    return await db.users.get_one_or_none(id=user_id)
+    async with async_session_maker() as session:
+        user = await UsersRepository(session).get_one_or_none(id=user_id)
+        return user
 
 
 @router.post("/logout")
-async def logout_user(db: DBDep, response: Response):
+async def logout_user(response: Response):
     response.delete_cookie("access_token")
     return {"status": "OK"}
