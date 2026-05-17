@@ -1,7 +1,5 @@
-from cgi import print_exception
-from turtle import title
 from sqlalchemy.orm import Mapped, mapped_column
-from sqlalchemy import ForeignKey, Integer, String
+from sqlalchemy import ForeignKey, Integer
 
 from src.database import Base
 

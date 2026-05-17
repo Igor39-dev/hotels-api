@@ -1,4 +1,6 @@
-from fastapi import APIRouter, Body
+from datetime import date
+from fastapi import APIRouter, Body, Query
+from fastapi.openapi.models import Example
 from src.api.dependencies import DBDep
 from src.shemas.rooms import RoomAdd, RoomAddRequest, RoomPatch, RoomPatchRequest
 
@@ -7,8 +9,13 @@ router = APIRouter(prefix="/hotels", tags=["Номера"])
 
 
 @router.get("/{hotel_id}/rooms")
-async def get_rooms(db: DBDep, hotel_id: int):
-    return await db.rooms.get_filtered(hotel_id=hotel_id)
+async def get_rooms(
+        hotel_id: int,
+        db: DBDep,
+        date_from: date = Query(openapi_examples={"пример по умолчанию": Example(value="2026-05-17")}),
+        date_to: date = Query(openapi_examples={"пример по умолчанию": Example(value="2026-05-18")}),
+):
+    return await db.rooms.get_filtered_by_time(hotel_id=hotel_id, date_from=date_from, date_to=date_to)
     
 
 @router.get("/{hotel_id}/rooms/{room_id}")
