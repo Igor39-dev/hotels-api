@@ -17,11 +17,7 @@ class RoomsRepository(BaseRepository):
         date_from: date,
         date_to: date,
     ):
-        """
-        select rooms_id, count(*) as rooms_booked from bookings
-        where date_from <= '2026-05-17' and date_to >= '2026-05-17'
-        group by rooms_id;
-        """
+
         rooms_count = (
             select(BookingOrm.room_id, func.count("*").label("rooms_booked"))
             .select_from(BookingOrm)
@@ -33,13 +29,6 @@ class RoomsRepository(BaseRepository):
             .cte(name="rooms_count")
         )
 
-        """
-        rooms_left_table as (
-            select rooms.id as room_id, rooms.quantity - coalesce(rooms_count.rooms_booked, 0) as rooms_left
-            from rooms
-            left join rooms_count on rooms.id = rooms_count.room_id
-        )
-        """
         rooms_left_table = (
             select(
                 RoomsOrm.id.label("room_id"),
@@ -50,14 +39,22 @@ class RoomsRepository(BaseRepository):
             .cte(name="rooms_left_table")
         )
 
-        """
-        select * from rooms_left_table
-        where rooms_left > 0;
-        """
-        query = (
-            select(rooms_left_table)
+        rooms_ids_for_hotel = (
+            select(RoomsOrm.id)
+            .select_from(RoomsOrm)
+            .filter_by(hotel_id=hotel_id)
+            .subquery(name="rooms_ids_for_hotel")
+        )
+        
+        rooms_ids_for_get = (
+            select(rooms_left_table.c.room_id)
             .select_from(rooms_left_table)
-            .filter(rooms_left_table.c.rooms_left > 0)
+            .filter(
+                rooms_left_table.c.rooms_left > 0,
+                rooms_left_table.c.room_id.in_(rooms_ids_for_hotel),
+                )
         )
 
-        print(query.compile(bind=engine, compile_kwargs={"literal_binds": True}))
+        print(rooms_ids_for_get.compile(bind=engine, compile_kwargs={"literal_binds": True}))
+
+        return await self.get_filtered(RoomsOrm.id.in_(rooms_ids_for_get))
