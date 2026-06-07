@@ -1,8 +1,9 @@
 from datetime import date
 from fastapi import Query, Body, APIRouter
 from fastapi.openapi.models import Example
+from fastapi_cache.decorator import cache
+
 from src.api.dependencies import DBDep, PaginationDep
-from src.database import async_session_maker
 from src.shemas.hotels import HotelAdd, SHotelPATCH
 
 
@@ -10,6 +11,7 @@ router = APIRouter(prefix="/hotels", tags=["ОТЕЛИ"])
 
 
 @router.get("")
+@cache(expire=10)
 async def get_hotels(
     pagination: PaginationDep,
     db: DBDep,
@@ -26,10 +28,6 @@ async def get_hotels(
         title=title,
         limit=per_page,
         offset=per_page * (pagination.page-1)
-    )
-    return await db.hotels.get_filtered_by_time(
-        date_from=date_from,
-        date_to=date_to,
     )
 
 
