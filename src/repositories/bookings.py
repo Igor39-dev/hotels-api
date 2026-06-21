@@ -12,7 +12,7 @@ class BookingsRepository(BaseRepository):
     mapper = BookingDataMapper()
 
 
-    async def get_bookings_with_today_check_in(self):
+    async def get_bookings_with_today_checkin(self):
         query = (
             select(BookingOrm)
             .filter(BookingOrm.date_from == date.today())
