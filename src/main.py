@@ -5,8 +5,10 @@ import uvicorn
 
 from fastapi_cache import FastAPICache
 from fastapi_cache.backends.redis import RedisBackend
+from fastapi_cache.backends.inmemory import InMemoryBackend
 
 from src.api.dependencies import get_db
+from src.config import settings
 from src.init import redis_manager
 from src.api.hotels import router as router_hotels
 from src.api.auth import router as router_auth
@@ -34,6 +36,9 @@ async def lifespan(app: FastAPI):
     FastAPICache.init(RedisBackend(redis_manager.redis), prefix="cache")
     yield
     await redis_manager.close()
+
+if settings.MODE == "TEST":
+    FastAPICache.init(InMemoryBackend(), prefix="fastapi-cache")
 
 app = FastAPI(
     title="Hotels API",

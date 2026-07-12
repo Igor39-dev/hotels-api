@@ -1,4 +1,8 @@
 import json
+from unittest import mock
+
+mock.patch("fastapi_cache.decorator.cache", lambda *args, **kwargs: lambda f: f).start()
+
 import pytest
 from src.api.dependencies import get_db
 from src.config import settings
