@@ -25,6 +25,7 @@ class RoomDataWithRelsMapper(DataMapper):
     db_model = RoomsOrm
     schema = RoomWtihRels
 
+
 class UserDataMapper(DataMapper):
     db_model = UsersOrm
     schema = User

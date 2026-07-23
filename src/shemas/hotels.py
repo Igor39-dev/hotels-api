@@ -13,4 +13,3 @@ class Hotel(HotelAdd):
 class SHotelPATCH(BaseModel):
     title: str | None = None
     location: str | None = None
-    

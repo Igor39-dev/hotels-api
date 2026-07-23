@@ -36,6 +36,7 @@ class RoomPatchRequest(BaseModel):
     quantity: int | None = None
     facilities_ids: list[int] = []
 
+
 class RoomPatch(BaseModel):
     hotel_id: int | None = None
     title: str | None = None

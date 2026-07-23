@@ -13,7 +13,8 @@ class FacilitiesOrm(Base):
     rooms: Mapped["RoomsOrm"] = relationship(
         back_populates="facilities",
         secondary="rooms_facilities",
-        )
+    )
+
 
 class RoomsFacilitiesOrm(Base):
     __tablename__ = "rooms_facilities"
@@ -21,5 +22,3 @@ class RoomsFacilitiesOrm(Base):
     id: Mapped[int] = mapped_column(Integer, primary_key=True)
     room_id: Mapped[int] = mapped_column(Integer, ForeignKey("rooms.id"))
     facility_id: Mapped[int] = mapped_column(Integer, ForeignKey("facilities.id"))
-
-    

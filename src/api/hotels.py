@@ -27,7 +27,7 @@ async def get_hotels(
         location=location,
         title=title,
         limit=per_page,
-        offset=per_page * (pagination.page-1)
+        offset=per_page * (pagination.page - 1),
     )
 
 
@@ -37,22 +37,24 @@ async def get_hotel(hotel_id: int, db: DBDep):
 
 
 @router.post("")
-async def create_hotel(db: DBDep, hotel_data: HotelAdd = Body(openapi_examples={
-    "1": {
-        "summary": "Сочи",
-        "value": {
-            "title": "Отель 4 seasons",
-            "location": "Сочи,ул. Катина, 1"
+async def create_hotel(
+    db: DBDep,
+    hotel_data: HotelAdd = Body(
+        openapi_examples={
+            "1": {
+                "summary": "Сочи",
+                "value": {"title": "Отель 4 seasons", "location": "Сочи,ул. Катина, 1"},
+            },
+            "2": {
+                "summary": "Дубай",
+                "value": {
+                    "title": "Отель Delux 1 звезда",
+                    "location": "Дубай, ул. Шейха, 2",
+                },
+            },
         }
-    },
-    "2": {
-        "summary": "Дубай",
-        "value": {
-            "title": "Отель Delux 1 звезда",
-            "location": "Дубай, ул. Шейха, 2"
-        }
-    }
-})):
+    ),
+):
     hotel = await db.hotels.add(hotel_data)
     await db.commit()
     return {"status": "OK", "data": hotel}
@@ -63,7 +65,6 @@ async def edit_hotel(db: DBDep, hotel_id: int, hotel_data: HotelAdd):
     await db.hotels.edit(hotel_data, id=hotel_id)
     await db.commit()
     return {"status": "OK"}
-
 
 
 @router.patch(

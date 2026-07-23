@@ -20,4 +20,3 @@ class User(BaseModel):
 
 class UserWithHashedPassword(User):
     hashed_password: str
-    

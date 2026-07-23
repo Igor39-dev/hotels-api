@@ -23,11 +23,12 @@ async def send_emails_bookings_today_checkin():
         bookings = await db.bookings.get_bookings_with_today_checkin()
         # print(f"{bookings=}")
 
+
 async def run_send_email_alltime():
     while True:
         await send_emails_bookings_today_checkin()
         await asyncio.sleep(5)
-        
+
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
@@ -36,6 +37,7 @@ async def lifespan(app: FastAPI):
     FastAPICache.init(RedisBackend(redis_manager.redis), prefix="cache")
     yield
     await redis_manager.close()
+
 
 if settings.MODE == "TEST":
     FastAPICache.init(InMemoryBackend(), prefix="fastapi-cache")
