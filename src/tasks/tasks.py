@@ -1,8 +1,8 @@
 import asyncio
 import os
 from time import sleep
-from PIL import Image
 
+from PIL import Image
 
 from src.database import async_session_maker_null_pool
 from src.tasks.celery_app import celery_instance

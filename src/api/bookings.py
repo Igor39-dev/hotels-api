@@ -1,7 +1,7 @@
 from fastapi import APIRouter
+
 from src.api.dependencies import DBDep, UserIdDep
 from src.shemas.bookings import BookingAdd, BookingAddRequest
-
 
 router = APIRouter(prefix="/bookings", tags=["Бронирования"])
 

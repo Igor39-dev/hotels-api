@@ -1,10 +1,11 @@
 from datetime import date
+
 from fastapi import APIRouter, Body, Query
 from fastapi.openapi.models import Example
+
 from src.api.dependencies import DBDep
 from src.shemas.facilities import RoomFacilityAdd
 from src.shemas.rooms import RoomAdd, RoomAddRequest, RoomPatch, RoomPatchRequest
-
 
 router = APIRouter(prefix="/hotels", tags=["Номера"])
 

@@ -1,7 +1,8 @@
 from datetime import datetime, timedelta, timezone
+
+import jwt
 from fastapi import HTTPException
 from pwdlib import PasswordHash
-import jwt
 
 from src.config import settings
 

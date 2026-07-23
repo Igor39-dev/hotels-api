@@ -1,8 +1,9 @@
 from datetime import date
-from sqlalchemy import select, func
 
-from src.models.rooms import RoomsOrm
+from sqlalchemy import func, select
+
 from src.models.bookings import BookingOrm
+from src.models.rooms import RoomsOrm
 
 
 def rooms_ids_for_booking(

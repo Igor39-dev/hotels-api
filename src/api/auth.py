@@ -1,11 +1,10 @@
 from fastapi import APIRouter, HTTPException, Response
-from jwt.exceptions import InvalidTokenError
 
 from src.api.dependencies import DBDep, UserIdDep
-from src.repositories.users import UsersRepository
 from src.database import async_session_maker
-from src.shemas.users import UserAdd, UserRequestAdd
+from src.repositories.users import UsersRepository
 from src.services.auth import AuthService
+from src.shemas.users import UserAdd, UserRequestAdd
 
 router = APIRouter(prefix="/auth", tags=["Авторизация и аутентификация"])
 

@@ -1,9 +1,9 @@
 import asyncio
-import time
 import threading
+import time
 
-from fastapi import FastAPI
 import uvicorn
+from fastapi import FastAPI
 
 app = FastAPI()
 
