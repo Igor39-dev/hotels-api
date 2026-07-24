@@ -1,7 +1,9 @@
 from fastapi import APIRouter, HTTPException, Response
+from fastapi import status
 
 from src.api.dependencies import DBDep, UserIdDep
 from src.database import async_session_maker
+from src.exceptions import ObjectAlreadyExistsException
 from src.repositories.users import UsersRepository
 from src.services.auth import AuthService
 from src.shemas.users import UserAdd, UserRequestAdd
@@ -14,13 +16,13 @@ async def register_user(
     db: DBDep,
     data: UserRequestAdd,
 ):
+    hashed_password = AuthService().hash_password(data.password)
+    new_user_data = UserAdd(email=data.email, hashed_password=hashed_password)
     try:
-        hashed_password = AuthService().hash_password(data.password)
-        new_user_data = UserAdd(email=data.email, hashed_password=hashed_password)
         await db.users.add(new_user_data)
         await db.commit()
-    except:
-        raise HTTPException(status_code=400)
+    except ObjectAlreadyExistsException:
+        raise HTTPException(status_code=status.HTTP_409_CONFLICT, detail="Пользователь с такой почтой уже существует")
 
     return {"status": "OK"}
 

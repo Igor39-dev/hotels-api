@@ -1,10 +1,11 @@
 from datetime import date
 
-from fastapi import APIRouter, Body, Query
+from fastapi import APIRouter, Body, HTTPException, Query, status
 from fastapi.openapi.models import Example
 from fastapi_cache.decorator import cache
 
 from src.api.dependencies import DBDep, PaginationDep
+from src.exceptions import HotelNotFoundHTTPException, ObjectNotFoundException, check_date_to_after_date_from
 from src.shemas.hotels import HotelAdd, SHotelPATCH
 
 router = APIRouter(prefix="/hotels", tags=["ОТЕЛИ"])
@@ -20,6 +21,7 @@ async def get_hotels(
     date_from: date = Query(openapi_examples={"пример": Example(value="2026-05-17")}),
     date_to: date = Query(openapi_examples={"пример": Example(value="2026-05-18")}),
 ):
+    check_date_to_after_date_from(date_from, date_to)
     per_page = pagination.per_page or 5
     return await db.hotels.get_filtered_by_time(
         date_from=date_from,
@@ -33,7 +35,10 @@ async def get_hotels(
 
 @router.get("/{hotel_id}")
 async def get_hotel(hotel_id: int, db: DBDep):
-    return await db.hotels.get_one_or_none(id=hotel_id)
+    try:
+        return await db.hotels.get_one(id=hotel_id)
+    except ObjectNotFoundException:
+        raise HotelNotFoundHTTPException
 
 
 @router.post("")
