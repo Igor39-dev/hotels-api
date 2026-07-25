@@ -8,11 +8,22 @@ class NabronirovalException(Exception):
     def __init__(self, *args, **kwargs) -> None:
         super().__init__(*args, **kwargs)
 
+
 class ObjectNotFoundException(NabronirovalException):
     detail = "Объект не найден"
 
+
+class RoomNotFoundException(ObjectNotFoundException):
+    detail = "Номер не найден"
+
+
+class HotelNotFoundException(ObjectNotFoundException):
+    detail = "Отель не найден"
+
+
 class ObjectAlreadyExistsException(NabronirovalException):
     detail = "Объект уже суЩествует"
+
 
 class AllRoomsAreBookedException(NabronirovalException):
     detail = "Не осталось свободных номеров"
@@ -30,9 +41,11 @@ class NabronirovalExceptionHTTPException(HTTPException):
     def __init__(self) -> None:
         super().__init__(status_code=self.status_code, detail=self.detail)
 
+
 class HotelNotFoundHTTPException(NabronirovalExceptionHTTPException):
     status_code = 404
     detail = "Отель не найден"
+
 
 class RoomNotFoundHTTPException(NabronirovalExceptionHTTPException):
     status_code = 404
