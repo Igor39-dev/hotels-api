@@ -5,9 +5,10 @@ from fastapi import HTTPException
 from pwdlib import PasswordHash
 
 from src.config import settings
+from src.services.base import BaseServie
 
 
-class AuthService:
+class AuthService(BaseServie):
     password_hash = PasswordHash.recommended()
 
     def verify_password(self, plain_password: str, hashed_password: str) -> bool:
@@ -29,8 +30,6 @@ class AuthService:
 
     def decode_token(self, token: str) -> dict:
         try:
-            return jwt.decode(
-                token, settings.JWT_SECRET_KEY, algorithms=[settings.JWT_ALGORITHM]
-            )
+            return jwt.decode(token, settings.JWT_SECRET_KEY, algorithms=[settings.JWT_ALGORITHM])
         except jwt.InvalidTokenError:
             raise HTTPException(status_code=401, detail="Invalid token")
