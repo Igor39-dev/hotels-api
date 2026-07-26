@@ -28,6 +28,11 @@ class ObjectAlreadyExistsException(NabronirovalException):
 class AllRoomsAreBookedException(NabronirovalException):
     detail = "Не осталось свободных номеров"
 
+
+class IncorrectTokenException(NabronirovalException):
+    detail = "Некорректный токен"
+
+
 class EmailNotRegisteredException(NabronirovalException):
     detail = "Пользователь с таким email не зарегистрирован"
 
@@ -61,6 +66,13 @@ class HotelNotFoundHTTPException(NabronirovalHTTPException):
 class RoomNotFoundHTTPException(NabronirovalHTTPException):
     status_code = status.HTTP_404_NOT_FOUND
     detail = "Номер не найден"
+
+
+class IncorrectTokenHTTPException(NabronirovalHTTPException):
+    status_code = status.HTTP_401_UNAUTHORIZED
+    detail = "Некорректный токен"
+
+
 class EmailNotRegisteredHTTPException(NabronirovalHTTPException):
     status_code = status.HTTP_401_UNAUTHORIZED
     detail = "Пользователь с таким email не зарегистрирован"
