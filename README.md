@@ -4,19 +4,19 @@
 docker network create myNetwork
 
 # конетейнер для БД
-docker run --name booking_db `
-    -p 6432:5432 `
-    -e POSTGRES_USER=abcde `
-    -e POSTGRES_PASSWORD=abcde `
-    -e POSTGRES_DB=booking `
-    --network=myNetwork `
-    --volume pg-booking-data:/var/lib/postgresql/data `
+docker run --name booking_db \
+    -p 6432:5432 \
+    -e POSTGRES_USER=abcde \
+    -e POSTGRES_PASSWORD=abcdkqptyoiqnae \
+    -e POSTGRES_DB=booking \
+    --network=myNetwork \
+    --volume pg-booking-data:/var/lib/postgresql/data \
     -d postgres:16
     
 # контейнер для Redis
-docker run --name booking_cache `
-    -p 7379:6379 `
-    --network=myNetwork `
+docker run --name booking_cache \
+    -p 7379:6379 \
+    --network=myNetwork \
     -d redis:7-alpine
 
 # контейнер для нашего приложения (Hotels-API)
@@ -39,3 +39,10 @@ docker run --name booking_celery_beat `
 
 # создание образа на основе Dockerfile
 docker build -t booking_image .
+
+
+# docker контейнер для nginx
+docker run --name booking_nginx `
+    --volume ./nginx.conf:/etc/nginx/nginx.conf `
+    --network=myNetwork `
+    --rm -p 80:80 nginx
