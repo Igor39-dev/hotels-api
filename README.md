@@ -46,3 +46,15 @@ docker run --name booking_nginx `
     --volume ./nginx.conf:/etc/nginx/nginx.conf `
     --network=myNetwork `
     --rm -p 80:80 nginx
+
+
+# GitLab Runner
+
+# docker котрейнер для gitlab-runner:
+docker run -d --name gitlab-runner --restart always \
+    -v /srv/gitlab-runner/config:/etx/gitlab-runner\
+    -v /var/run/docker.sock:/var/run/docker.sock \
+    gitlab/gitlab-runner:latest
+
+# регистрация gitlab-runner:
+docker run --rm -it -v /srv/gitlab-runner/config:/etc/gitlab-runner gitlab/gitlab-runner:latest register
