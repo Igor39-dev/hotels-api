@@ -1,5 +1,5 @@
 
-👉 **deploy -** [https://igor-djan.ru/](https://igor-djan.ru/) 
+👉 **deploy -** [http://igor-djan.ru/docs](https://igor-djan.ru/docs)
 
 # hotels-api
 
