@@ -1,6 +1,4 @@
 
-👉 **deploy -** [http://igor-djan.ru/docs](http://igor-djan.ru/docs)
-
 # hotels-api
 
 # создание сети
