@@ -9,7 +9,7 @@ from src.exceptions import (
     IncorrectPasswordException,
     IncorrectTokenException,
     ObjectAlreadyExistsException,
-    UserAlreadyExistsException
+    UserAlreadyExistsException,
 )
 from src.services.base import BaseServie
 from src.shemas.users import UserAdd, UserRequestAdd

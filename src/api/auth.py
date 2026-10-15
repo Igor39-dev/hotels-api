@@ -6,8 +6,8 @@ from src.exceptions import (
     EmailNotRegisteredHTTPException,
     IncorrectPasswordException,
     IncorrectPasswordHTTPException,
+    UserAlreadyExistsException,
     UserEmailAlreadyExistsHTTPException,
-    UserAlreadyExistsException
 )
 from src.services.auth import AuthService
 from src.shemas.users import UserRequestAdd

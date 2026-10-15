@@ -1,10 +1,10 @@
-from collections.abc import Sequence
 import logging
+from collections.abc import Sequence
 
 from asyncpg.exceptions import UniqueViolationError
 from pydantic import BaseModel
 from sqlalchemy import delete, insert, select, update
-from sqlalchemy.exc import NoResultFound, IntegrityError
+from sqlalchemy.exc import IntegrityError, NoResultFound
 
 from src.exceptions import ObjectAlreadyExistsException, ObjectNotFoundException
 from src.repositories.mappers.base import DataMapper

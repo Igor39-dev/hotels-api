@@ -1,7 +1,11 @@
 from fastapi import APIRouter, HTTPException, status
 
 from src.api.dependencies import DBDep, UserIdDep
-from src.exceptions import AllRoomsAreBookedException, ObjectNotFoundException, RoomNotFoundHTTPException
+from src.exceptions import (
+    AllRoomsAreBookedException,
+    ObjectNotFoundException,
+    RoomNotFoundHTTPException,
+)
 from src.shemas.bookings import BookingAdd, BookingAddRequest
 from src.shemas.hotels import Hotel
 from src.shemas.rooms import Room

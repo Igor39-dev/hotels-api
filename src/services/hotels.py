@@ -1,5 +1,10 @@
 from datetime import date
-from src.exceptions import HotelNotFoundException, ObjectNotFoundException, check_date_to_after_date_from
+
+from src.exceptions import (
+    HotelNotFoundException,
+    ObjectNotFoundException,
+    check_date_to_after_date_from,
+)
 from src.services.base import BaseServie
 from src.shemas.hotels import Hotel, HotelAdd, SHotelPATCH
 
