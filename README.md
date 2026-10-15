@@ -61,6 +61,9 @@ REST API для сервиса бронирования отелей. Позво
 
 ## Запуск
 
+Сервисы приложения (API, Celery worker, Celery beat) описаны в `docker-compose.yml`.
+БД и Redis — внешние контейнеры, которые создаются один раз.
+
 ### Создание сети
 
     docker network create myNetwork
@@ -83,36 +86,24 @@ REST API для сервиса бронирования отелей. Позво
         --network=myNetwork \
         -d redis:7-alpine
 
-### Сборка образа приложения
+### Запуск сервисов приложения
 
-    docker build -t booking_image .
+    docker compose up -d --build
 
-### Контейнер для приложения (Hotels-API)
+Поднимаются контейнеры `booking_back`, `booking_celery_worker` и
+`booking_celery_beat`; сеть `myNetwork` и файл `.env` заданы в `docker-compose.yml`.
 
-    docker run --name booking-back \
-        -p 7777:8001 \
-        --network=myNetwork \
-        booking_image
-
-При старте контейнера автоматически применяются миграции и запускается приложение:
+При старте контейнера `booking_back` автоматически применяются миграции и запускается приложение:
 
     alembic upgrade head && python src/main.py
 
-### Контейнер для Celery worker
+### Остановка сервисов
 
-    docker run --name booking_celery_worker \
-        --network=myNetwork \
-        booking_image \
-        celery --app=src.tasks.celery_app:celery_instance worker -l INFO
-
-### Контейнер для Celery beat
-
-    docker run --name booking_celery_beat \
-        --network=myNetwork \
-        booking_image \
-        celery --app=src.tasks.celery_app:celery_instance worker -l INFO -B
+    docker compose down
 
 ### Контейнер для Nginx
+
+Nginx не входит в `docker-compose.yml` и запускается отдельно как reverse proxy:
 
     docker run --name booking_nginx \
         --volume ./nginx.conf:/etc/nginx/nginx.conf \
